@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liq'wala Colours Soundboard</title>
+    <style>
+        :root {
+            --bg-color: #f4f6f8;
+            --card-bg: #ffffff;
+            --text-main: #2c3e50;
+            --text-sub: #666666;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 8px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        p.instructions {
+            margin-bottom: 30px;
+            color: var(--text-sub);
+            text-align: center;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            user-select: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .card:active {
+            transform: translateY(0);
+        }
+
+        .color-swatch {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-bottom: 15px;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .english-name {
+            font-size: 0.9rem;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .liqwala-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .phonetic {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Liq'wala Colour Soundboard</h1>
+    <p class="instructions">Click any colour card to listen to the pronunciation.</p>
+
+    <div class="grid" id="soundboard"></div>
+
+    <script>
+        const colours = [
+            { english: "Red", liqwala: "ƛ̓aqwa", phonetic: "Tlum-kwa", hex: "#e74c3c", audio: "ƛ̓aqwa.mp3" },
+            { english: "Yellow", liqwala: "ƛ̓ix̌a", phonetic: "Tlee-kh-ah", hex: "#f1c40f", audio: "ƛ̓ix̌a.mp3" },
+            { english: "Blue", liqwala: "dzasa", phonetic: "Dzah-sah", hex: "#3498db", audio: "dzasa.mp3" },
+            { english: "Green", liqwala: "ɫənx̌a", phonetic: "Luhn-kh-ah", hex: "#2ecc71", audio: "ɫənx̌a.mp3" },
+            { english: "Orange", liqwala: "ʔayəndzistu", phonetic: "Ah-yuhn-dzee-stoo", hex: "#e67e22", audio: "ʔayəndzistu.mp3" },
+            { english: "Purple", liqwala: "kəlebəstu", phonetic: "Kuh-leh-buh-stoo", hex: "#9b59b6", audio: "kəlebəstu.mp3" },
+            { english: "Brown", liqwala: "kwənx̌a", phonetic: "Kuhn-kh-ah", hex: "#8d6e63", audio: "kwənx̌a.mp3" },
+            { english: "Beige", liqwala: "c̓əxstu", phonetic: "Tsuhkh-stoo", hex: "#f5f5dc", audio: "c̓əxstu.mp3" },
+            { english: "White", liqwala: "məla", phonetic: "Muh-lah", hex: "#ffffff", audio: "məla.mp3" },
+            { english: "Black", liqwala: "c̓uɫa", phonetic: "Tsoo-lah", hex: "#2c3e50", audio: "c̓uɫa.mp3" }
+        ];
+
+        const container = document.getElementById('soundboard');
+
+        colours.forEach(colour => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            
+            card.innerHTML = `
+                <div class="color-swatch" style="background-color: ${colour.hex};"></div>
+                <div class="english-name">${colour.english}</div>
+                <div class="liqwala-name">${colour.liqwala}</div>
+                <div class="phonetic">[ ${colour.phonetic} ]</div>
+            `;
+
+            card.addEventListener('click', () => {
+                // encodeURIComponent ensures special Liq'wala characters work properly in audio URLs
+                const safeAudioPath = `colours/${encodeURIComponent(colour.audio)}`;
+                const audio = new Audio(safeAudioPath);
+                
+                audio.play().catch(error => {
+                    console.error(`Playback failed for: ${colour.audio}`, error);
+                    alert(`Could not play audio: ${colour.audio}. Check that the file exists in your "colours" folder.`);
+                });
+            });
+
+            container.appendChild(card);
+        });
+    </script>
+</body>
+</html>
